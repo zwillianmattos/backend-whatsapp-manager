@@ -1,0 +1,40 @@
+{
+    "lang": "pt-BR",
+    "types": {
+        "feat": "✨Novos recursos que os usuários podem perceber",
+        "build": "🛠 Builds - Mudanças que afetam o sistema de compilação ou dependências externas (exemplos de escopo: npm)",
+        "deps": "🛠 Adicionar, atualizar, remover dependências",
+        "docs": "📚 Documento apenas alterado",
+        "fix": "🐛 Bug fix",
+        "style": "💎 Estilos - alterações que não afetam o significado do código (espaço em branco, formatação, ponto e vírgula ausente, etc)",
+        "refactor": "📦 Refatoração de código - uma alteração de código que não corrige um bug nem adiciona um recurso",
+        "test": "🚨 Testes - Adicionando testes ausentes ou corrigindo testes existentes",
+        "perf": "🚀 Melhorias de desempenho - uma mudança de código que melhora o desempenho",
+        "ci": "⚙️ Integrações contínuas - Mudanças em nossos arquivos e scripts de configuração de CI (escopos de exemplo: Travis, Circle, BrowserStack, SauceLabs)",
+        "temp": false,
+        "chore": "♻️ Tarefas - Outras mudanças que não modificam os arquivos src ou de teste",
+        "revert": "🗑 Reverte - Reverte um commit anterior"
+    },
+    "min-len": 10,
+    "max-len": 120,
+    "example": "feat: ✨ nova função",
+    "scopeDescriptions": [
+        "Opcional, pode ser qualquer coisa que especifique a localização da alteração do commit.",
+        "Por exemplo, $location, $browser, $compile, $rootScope",
+        "No desenvolvimento de aplicativos, um escopo é uma página, módulo ou componente, etc."
+    ],
+    "invalidScopeDescriptions": [
+        "`scope` é opcional, mas não pode estar vazio se houver parênteses."
+    ],
+    "subjectDescriptions": [
+        "Obrigatório ter uma breve descrição.",
+        "Obrigatório ter o link do card",
+        "Tentar ter um commit por card do jira, sempre aplicar squash no card mas pode acontecer de uma correção de bug gerar o mesmo commit para o card"
+    ],
+    "invalidSubjectDescriptions": [
+        "Não coloque a primeira letra em maiúscula",
+        "Sem ponto \".\" No final"
+    ],
+    "showInvalidHeader": true,
+    "debug": true
+}
