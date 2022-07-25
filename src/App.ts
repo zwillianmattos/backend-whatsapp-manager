@@ -29,7 +29,7 @@ class App {
     private constructor() {
         this.app = express();
 
-        const allowedOrigins = ['localhost:9000','app.barbeariasantosete.com.br', 'http://app.barbeariasantosete.com.br', '*'];
+        const allowedOrigins = ['localhost:9000','localhost:8000','http://localhost:8000','app.barbeariasantosete.com.br', 'http://app.barbeariasantosete.com.br', '*'];
 
         const options: cors.CorsOptions = {
             origin: '*'
@@ -43,8 +43,8 @@ class App {
         this.server = createServer(this.app);
         this.io = new WebSocketService(this.server);
         this.whatsapp = new WhatsappService(this.server, this.io);
-        // this.db = new MongodbService();
-        // this.cron = CronService.getInstance();
+        this.db = new MongodbService();
+        this.cron = CronService.getInstance();
     }
 }
 
