@@ -1,5 +1,5 @@
 import cors from "cors";
-import express, { Express } from "express";
+import express from "express";
 import { createServer, Server } from "http";
 import { IDatabase } from "./interfaces/IDatabase";
 import { CronService } from "./services/Cron";
@@ -44,7 +44,7 @@ class App {
         this.io = new WebSocketService(this.server);
         this.whatsapp = new WhatsappService(this.server, this.io);
         this.db = new MongodbService();
-        this.cron = CronService.getInstance();
+        CronService.getInstance().then( instance => this.cron = instance).catch( err => console.error(err));
     }
 }
 

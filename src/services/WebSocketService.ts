@@ -19,7 +19,6 @@ export default class WebSocketService {
             }
         });
 
-        console.log(this.io);
         this.listeners();
     }
 
@@ -67,6 +66,7 @@ export default class WebSocketService {
 
             socket.on('enviarMensagem', async (data) => {
                 const whatsapp = App.getInstance().whatsapp?.getInstance;
+                await whatsapp?.initialize();
                 await whatsapp?.sendText(data.to, data.msg);
 
                 // await whatsapp?.sendImage(

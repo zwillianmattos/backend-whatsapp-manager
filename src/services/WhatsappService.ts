@@ -1,5 +1,5 @@
 import { Server } from "http";
-import { create, Whatsapp, CreateOptions, CatchQR, StatusFind, SocketState } from 'venom-bot';
+import { create, Whatsapp, CreateOptions, CatchQR, SocketState, } from 'venom-bot';
 import WebSocketService from "./WebSocketService";
 
 import App from "../App";
@@ -25,17 +25,25 @@ export default class WhatsappService {
                 session: 'clientbarbeariasantosete',
                 headless: true,
                 devtools: false,
-                useChrome: true,
+                useChrome: false,
                 debug: false,
                 logQR: true,
+                disableSpins: true,
+                disableWelcome: true,
                 mkdirFolderToken: '',
                 folderNameToken: 'tokens_whatsapp',
                 // browserWS: '',
                 rowserArgs: [''],
                 refreshQR: 3000,
                 autoClose: 0,
-                disableSpins: true,
-                puppeteerOptions: ["--no-sandbox", "--disabled-setupid-sandbox"],
+                defaultViewport: null,
+                puppeteerOptions: [
+                    "--incognito",
+                    "--single-process",
+                    "--no-zygote", 
+                    "--no-sandbox", 
+                    "--disabled-setupid-sandbox", 
+                    '--disable-setuid-sandbox',],
                 multidevice: true,
             } as CreateOptions;
             const instance = await create(createOptions)
@@ -77,6 +85,8 @@ export default class WhatsappService {
             });
         });
 
+
+        this.instance?.close();
     }
 
     private _catchQR(qrCode: string, asciiQR: string, attempt: number, urlCode?: string) {

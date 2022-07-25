@@ -1,10 +1,7 @@
-import dotenv from "dotenv";
 import App from "./App";
 import routes from "./routes/Routes";
 
-dotenv.config();
-
-const port = process.env.SERVER_PORT || 8080;
+const port = process.env.PORT || process.env.SERVER_PORT || 9001;
 App.getInstance().server.listen(port, () => {
     console.log(`Listening: ${port}`);
 

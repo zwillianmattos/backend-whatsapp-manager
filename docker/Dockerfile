@@ -1,4 +1,4 @@
-FROM node:14-slim
+FROM node:16-slim
 
 RUN apt-get update || : && apt-get install python -y
 
@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
 RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome \
     && mkdir -p /home/chrome && chown -R chrome:chrome /home/chrome
 
-
+RUN yarn add ts-node-dev
 # Run Chrome non-privileged
 USER chrome
 

@@ -1,13 +1,13 @@
 import mongoose from 'mongoose'
 import { IDatabase } from '../interfaces/IDatabase';
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 
 export default class MongodbService implements IDatabase {
 
     private instance?: MongodbService;
 
     constructor() {
-        dotenv.config();
+        // dotenv.config();
         this.instance = this;
         this.connect();
     }

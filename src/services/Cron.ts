@@ -12,16 +12,16 @@ export class CronService {
 
     private static instance?: CronService;
 
-    private cron: any;
+    private crons?: Array<any>;
     constructor() {
-
+        console.log("[Cron]: Starting Service... ");
     }
 
-    public static getInstance(): CronService {
+    public static async getInstance(): Promise<CronService> {
         try {
             if (!this.instance) {
                 this.instance = new CronService();
-                this.instance.start();
+                await this.instance.start();
             }
 
             return this.instance;
@@ -33,49 +33,52 @@ export class CronService {
     public async start() {
         // 23 9 14 * *
         // 56 9 15/30 * *
+        const dataCrons: Array<any> = await new MessagesRepository().getAllCrons();
+        dataCrons.forEach((cron: any) => {
+            var dados = cron;
+            let cronD = new CronJob(cron.cron, () => {
+                console.log("[Cron]: Running ");
+                
+                dados?.contacts?.map(async (contact: any) => {
+                    // Busca o contato
+                    let contactData = await new ContactsRepository().getById(contact);
 
-        this.cron = new CronJob('25 * * * *', () => {
-            console.log("[Cron]: Running ");
-            new MessagesRepository().getAllCrons().then((crons: Array<any>) => {
+                    const WhatsApp = App.getInstance().whatsapp?.getInstance;
 
-                crons.forEach((cron: any) => {
-                    cron?.contacts?.map(async (contact: any) => {
-                        // Busca o contato
-                        let contactData = await new ContactsRepository().getById(contact);
+                    console.log(contactData.phone);
+                    // Acessa o chat                
+                    let chat: Chat | undefined = await WhatsApp?.getChatById(contactData.phone);
 
-                        const WhatsApp = App.getInstance().whatsapp?.getInstance;
+                    if (typeof chat !== "undefined" && chat != null) {
 
-                        console.log(contactData.phone);
-                        // Acessa o chat                
-                        let chat: Chat | undefined = await WhatsApp?.getChatById(contactData.phone);
+                        console.log("[Cron]: Enviando mensagem para " + contactData.phone);
 
-                        if (typeof chat !== "undefined" && chat != null) {
+                        // Se for, envia mensagem
+                        WhatsApp?.sendText(contactData?.phone, dados.message);
 
-                            console.log("[Cron]: Enviando mensagem para " + contactData.phone);
+                        // WhatsApp?.sendImage(
+                        //     contactData?.phone, 
+                        //     'https://res.cloudinary.com/dxz4ivhm8/image/upload/v1631622812/barbearia-santo-sete/208892539_1009499919816634_1891864338405063903_n.jpg', 
+                        //     '208892539_1009499919816634_1891864338405063903_n.jpg',
+                        //     cron.message);
 
-                            // Se for, envia mensagem
-                            WhatsApp?.sendText(contactData?.phone, cron.message);
-
-                            // WhatsApp?.sendImage(
-                            //     contactData?.phone, 
-                            //     'https://res.cloudinary.com/dxz4ivhm8/image/upload/v1631622812/barbearia-santo-sete/208892539_1009499919816634_1891864338405063903_n.jpg', 
-                            //     '208892539_1009499919816634_1891864338405063903_n.jpg',
-                            //     cron.message);
-
-                            // Se estiver marcado pra nao repetir, remove a mensagem
-                            if (cron.repeat == false) {
-                                // remove a programação
-                                await new MessagesRepository().deleteMany(cron._id).then(async () => {
-                                    // Remove os contatos
-                                    await new ContactsRepository().deleteMany(contact);
-                                });
-                            }
+                        // Se estiver marcado pra nao repetir, remove a mensagem
+                        if (dados.repeat == false) {
+                            // remove a programação
+                            await new MessagesRepository().deleteMany(dados._id).then(async () => {
+                                // Remove os contatos
+                                await new ContactsRepository().deleteMany(contact);
+                            });
                         }
-                    });
+                    }
                 });
-            });
+            }, null, true, 'America/Sao_Paulo');
 
-        }, null, true, 'America/Sao_Paulo');
+            console.log("[Cron]: Starting " + cronD);
+            cronD.start();
+            this.crons?.push(cronD);
+        });
+
         // this.cron = new CronJob('* * * * *', () => {
         //     console.log("[Cron]: Running ");
         //     new MessagesRepository().getAllCrons().then((crons: Array<any>) => {
@@ -148,11 +151,11 @@ export class CronService {
         //     });
 
         // }, null, true, 'America/Sao_Paulo');
-        this.cron.start();
+
     }
 
     public stop() {
-        this.cron.stop();
+        this.crons?.map(cron => cron.stop());
     }
 
 }
