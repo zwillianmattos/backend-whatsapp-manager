@@ -43,7 +43,7 @@ class App {
         this.server = createServer(this.app);
         this.io = new WebSocketService(this.server);
         this.whatsapp = new WhatsappService(this.server, this.io);
-        this.db = new MongodbService();
+        // this.db = new MongodbService();
         // this.cron = CronService.getInstance();
     }
 }
